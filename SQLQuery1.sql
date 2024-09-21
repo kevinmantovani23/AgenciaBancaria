@@ -146,10 +146,7 @@ AS
 		DELETE FROM conta
 		WHERE cpfCliente1 = @cpf
 	END
-	ELSE
-	BEGIN
-		RAISERROR('Conta conjunta ativa, deleção não permitida.', 16, 1)
-	END
+	
 
 /*• O sistema deve permitir atualizar a senha do cliente, o saldo, o limite de crédito e o
 percentual de rendimento da poupança. Outros atributos não podem ser
@@ -200,7 +197,7 @@ BEGIN TRY
 
 /*• Um cliente novo deve preencher seus dados, o tipo de conta escolhida que
 inicia com saldo zerado e limite de crédito em 500,00. Se for poupança, o dia
-de aniversário padrão é dia 10, com início de rendimento em 1%.*/
+de aniversário padrão é dia 10, com início de rendimento em 1%.   CHECK: FUNCIONANDO*/
 CREATE PROCEDURE sp_verificaCPF(@cpf VARCHAR(14), @valido VARCHAR(30) OUTPUT)
 AS
 	IF (LEN(@cpf) != 11 OR ISNUMERIC(@cpf) = 0)
@@ -249,7 +246,8 @@ AS
 
 /*• Para se incluir um(a) companheiro(a) na conta conjunta, esta já precisa
 existir e ter um cliente cadastrado. Deve se passar por uma tela de login e
-senha para autorizar a inclusão de um cliente na conta conjunta.*/
+senha para autorizar a inclusão de um cliente na conta conjunta. STATUS: LOGIN TESTADO, AINDA FALTA A INSERÇÃO DE CLIENTE CONTA CONJUNTA. */
+
 CREATE PROCEDURE sp_verificaLogin(@cpf VARCHAR(14), @senha VARCHAR(30), @valido BIT OUTPUT)
 AS
 	IF((SELECT cpf FROM cliente WHERE cpf = @cpf AND senha = @senha) IS NOT NULL)
@@ -276,12 +274,12 @@ END
 
 
 /*• Não é permitido incluir um(a) companheiro(a) na conta conjunta em uma
-conta com saldo menor ou igual a zero. Salvo conta criada no mesmo dia.
+conta com saldo menor ou igual a zero. Salvo conta criada no mesmo dia. CHECK: TESTADO
 */
 CREATE PROCEDURE sp_validarContaParaConj(@codigoConta VARCHAR(30), @valido BIT OUTPUT)
 AS
-	IF((SELECT saldo FROM conta WHERE codigo = @codigoConta) > 0 AND (SELECT DAY(dataAbertura) FROM conta 
-		WHERE codigo = @codigoConta) < DAY(GETDATE()))
+	IF((SELECT saldo FROM conta WHERE codigo = @codigoConta) > 0 OR (SELECT dataAbertura FROM conta 
+		WHERE codigo = @codigoConta) = GETDATE())
 	BEGIN
 		SET @valido = 1
 	END
@@ -289,3 +287,4 @@ AS
 	BEGIN
 		SET @valido = 0
 	END
+

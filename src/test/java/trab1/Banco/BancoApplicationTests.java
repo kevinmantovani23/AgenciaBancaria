@@ -25,6 +25,20 @@ class BancoApplicationTests {
 	@Autowired
 	private ClienteRepository cliRep;
 	
+	@Test
+	@Transactional
+	void testContaConj() {
+		boolean resu = cliRep.sp_validarContaParaConj("300612");
+		System.out.println(resu);
+	}
+	
+	@Test
+	@Transactional
+	void verificaCadastro() {
+		boolean resu = cliRep.sp_verificaLogin("52851481061", "joaoz123");
+		
+		System.out.println(resu);
+	}
 	
 	@Test
 	@Transactional
