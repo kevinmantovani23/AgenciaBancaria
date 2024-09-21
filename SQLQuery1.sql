@@ -37,7 +37,7 @@ conta c
 ON cp.codigo = c.codigo
 
 DECLARE @error VARCHAR(200)
-EXEC sp_insertClienteConta 'Kevin', '52851481061' , 'joaoz123',  'corrente', '30', @error
+EXEC sp_verificaSenhaCliente '', @error OUTPUT
 PRINT(@error)
 
 CREATE TABLE contacorrente (
@@ -57,7 +57,7 @@ PRIMARY KEY (codigo)
 
 /*O código da conta deve ser o código da agência, concatenado com os 3
 últimos dígitos do CPF do titular (Se for conta conjunta, deve trazer os dois),
-concatenado com um dígito verificador*/
+concatenado com um dígito verificador CHECK: FUNCIONANDO*/
 
 CREATE PROCEDURE sp_geracodigoconta(@codAgencia VARCHAR(20), @cpfCliente1 VARCHAR(14), @cpfCliente2 VARCHAR(14), @codConta VARCHAR(30) OUTPUT)
 AS
@@ -73,7 +73,7 @@ AS
 	EXEC sp_geraDigito @codConta, @codConta OUT
 /*• O dígito verificador é a soma de todos os dígitos do RA gerado anteriormente
 e o resultado dividido por 5, por fim, pega-se apenas a parte inteira do resto
-da divisão.*/
+da divisão. CHECK: FUNCIONANDO*/
 CREATE PROCEDURE sp_geraDigito(@codigo VARCHAR(30), @codigoDigito VARCHAR(30) OUTPUT)
 AS
 	DECLARE @n INT, @digito INT
@@ -88,7 +88,7 @@ AS
 		SET @codigoDigito = @codigo + CAST(@digito AS VARCHAR(3))
 
 /*• A senha do aluno para acesso ao acervo deve ser cadastrada pelo usuário e,
-deve ter 8 caracteres, sendo que pelo menos 3 deles devem ser numéricos.*/
+deve ter 8 caracteres, sendo que pelo menos 3 deles devem ser numéricos. CHECK: FUNCIONANDO*/ 
 CREATE PROCEDURE sp_verificaSenhaCliente(@senha VARCHAR(9), @erro VARCHAR(200) OUTPUT)
 AS
 	DECLARE @cont INT
@@ -108,9 +108,7 @@ AS
 		END
 		IF(@num < 3)
 		BEGIN
-			SET @erro = 'A senha deve ter pelo menos 3 números'
-			RAISERROR(@erro, 16, 1)
-			
+			SET @erro = 'A senha deve ter pelo menos 3 números'			
 		END
 		
 	END
@@ -118,10 +116,9 @@ AS
 	 ELSE IF (LEN(@senha) != 8)
 	 BEGIN
 		SET @erro = 'A senha deve ter 8 caracteres'
-		RAISERROR(@erro, 16, 1)
 	 END
 
-/*• Clientes com contas conjuntas não podem ser excluídos da base.*/
+/*• Clientes com contas conjuntas não podem ser excluídos da base. STATUS: ESPERANDO TESTAR*/
 CREATE PROCEDURE sp_verifcontaconj(@cpf VARCHAR(14), @existe BIT OUTPUT)
 AS
 IF ((SELECT cpfCliente2 FROM conta WHERE cpfCliente1 = @cpf) IS NULL AND (SELECT cpfCliente2 FROM conta WHERE cpfCliente2 = @cpf) IS NULL)
@@ -206,7 +203,7 @@ inicia com saldo zerado e limite de crédito em 500,00. Se for poupança, o dia
 de aniversário padrão é dia 10, com início de rendimento em 1%.*/
 CREATE PROCEDURE sp_verificaCPF(@cpf VARCHAR(14), @valido VARCHAR(30) OUTPUT)
 AS
-	IF (LEN(@cpf) != 11)
+	IF (LEN(@cpf) != 11 OR ISNUMERIC(@cpf) = 0)
 	BEGIN
 		SET @valido = 'CPF inválido.'
 	END

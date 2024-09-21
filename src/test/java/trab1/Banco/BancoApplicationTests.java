@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import jakarta.transaction.Transactional;
 import trab1.Banco.model.Agencia;
 import trab1.Banco.repository.AgenciaRepository;
+import trab1.Banco.repository.ClienteRepository;
 import trab1.Banco.repository.ContaRepository;
 
 @SpringBootTest
@@ -21,6 +22,25 @@ class BancoApplicationTests {
 	@Autowired
 	private ContaRepository contRep;
 	
+	@Autowired
+	private ClienteRepository cliRep;
+	
+	
+	@Test
+	@Transactional
+	void verificaCpf() {
+		String resu = cliRep.sp_verificaCPF("aaaaaaaaaaa");
+		System.out.println(resu);
+	}
+	
+	
+	@Test
+	@Transactional
+	void verificaSenha() {
+		String resu = cliRep.sp_verificaSenhaCliente("joazzzz4");
+		
+		System.out.println(resu);
+	}
 	
 	@Test
 	@Transactional
