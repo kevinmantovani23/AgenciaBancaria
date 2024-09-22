@@ -110,7 +110,8 @@ AS
 		SET @erro = 'A senha deve ter 8 caracteres'
 	 END
 
-/*• Clientes com contas conjuntas não podem ser excluídos da base. STATUS: ESPERANDO TESTAR*/
+/*• Clientes com contas conjuntas não podem ser excluídos da base. STATUS: funcionando*/
+
 CREATE PROCEDURE sp_verifcontaconj(@cpf VARCHAR(14), @existe BIT OUTPUT)
 AS
 IF ((SELECT cpfCliente2 FROM conta WHERE cpfCliente1 = @cpf) IS NULL AND (SELECT cpfCliente2 FROM conta WHERE cpfCliente2 = @cpf) IS NULL)
@@ -142,8 +143,8 @@ AS
 
 /*• O sistema deve permitir atualizar a senha do cliente, o saldo, o limite de crédito e o
 percentual de rendimento da poupança. Outros atributos não podem ser
-atualizados.*/
---ARRUMAR ESSA PROCEDURE DEPOIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+atualizados.	status : FUNCIONANDO*/
+
 CREATE PROCEDURE sp_updateClienteSenha(@cpf VARCHAR(14), @senha VARCHAR(20))
 AS
 DECLARE @erro VARCHAR(100)
@@ -170,35 +171,33 @@ AS
 		RAISERROR(@erro, 16, 1)
 	END CATCH
 
-
-	ELSE IF (@func = 1)
-	BEGIN
-		IF (@conta LIKE '%corrente%')
-		BEGIN
-			UPDATE contacorrente
-			SET limiteCredito = @limite
-			WHERE codigo = @codigo
-
-			UPDATE conta
-			SET saldo = @saldo
-			WHERE codigo = @codigo
-		END
-		ELSE IF (@conta LIKE '%poupança%')
-		BEGIN
-			UPDATE contapoupanca
-			SET percentualRendimento = @percentual
-			WHERE codigo = @codigo
-
-			UPDATE conta
-			SET saldo = @saldo
-			WHERE codigo = @codigo
-		END
-	END
+CREATE PROCEDURE sp_updateContaLimCredito(@codigo VARCHAR(30), @limite DECIMAL(7,2))
+AS
+	DECLARE @erro VARCHAR(100)
+	BEGIN TRY
+		UPDATE contacorrente
+		SET limiteCredito = @limite
+		WHERE codigo = @codigo
 	END TRY
 	BEGIN CATCH
 		SET @erro = ERROR_MESSAGE()
-		RAISERROR(@erro, 16,1)
+		RAISERROR(@erro, 16, 1)
 	END CATCH
+
+CREATE PROCEDURE sp_updateContaPerPoupanca(@codigo VARCHAR(30), @percentual DECIMAL(3,2))
+AS
+	DECLARE @erro VARCHAR(100)
+	BEGIN TRY
+		UPDATE contapoupanca
+		SET percentualRendimento = @percentual
+		WHERE codigo = @codigo
+	END TRY
+	BEGIN CATCH
+		SET @erro = ERROR_MESSAGE()
+		RAISERROR(@erro, 16, 1)
+	END CATCH
+
+	
 
 /*• Um cliente novo deve preencher seus dados, o tipo de conta escolhida que
 inicia com saldo zerado e limite de crédito em 500,00. Se for poupança, o dia

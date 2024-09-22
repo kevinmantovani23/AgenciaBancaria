@@ -20,4 +20,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, String>{
 	@Procedure(name = "Cliente.sp_verificaCPF") 
 	public String sp_verificaCPF(@Param("cpf") String cpf);
 	
+	@Procedure(name = "Cliente.sp_updateClienteSenha")
+	public void sp_updateClienteSenha(@Param("cpf") String cpf, @Param("senha") String senha);
 }
