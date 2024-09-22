@@ -26,6 +26,11 @@ class BancoApplicationTests {
 	private ClienteRepository cliRep;
 	
 	@Test
+	void testInsertContaConj() {
+		contRep.sp_inserirClienteContaConj("300612", "52851489879");
+	}
+	
+	@Test
 	@Transactional
 	void testContaConj() {
 		boolean resu = cliRep.sp_validarContaParaConj("300612");

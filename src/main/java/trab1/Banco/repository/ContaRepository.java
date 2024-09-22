@@ -13,5 +13,7 @@ public interface ContaRepository extends JpaRepository<Conta, String> {
 	public String sp_insertClienteConta(@Param("nome")String nome,@Param("cpf") String cpf,@Param("senha")String senha, @Param("tipo")String tipo,@Param("agencia") String agencia);
 	
 	@Procedure(name = "Conta.sp_inserirClienteContaConj")
-	public String sp_inserirClienteContaConj(@Param("codigo")String codigo, @Param("cpf")String cpf,@Param("cpf2") String cpf2);
+	public void sp_inserirClienteContaConj(@Param("codigo")String codigo, @Param("cpf2") String cpf2);
+	
+	
 }

@@ -31,14 +31,6 @@ FOREIGN KEY (codigoAgencia) REFERENCES agencia(codigo),
 PRIMARY KEY (codigo)
 )
 
-select * from contapoupanca cp
-LEFT JOIN
-conta c 
-ON cp.codigo = c.codigo
-
-DECLARE @error VARCHAR(200)
-EXEC sp_verificaSenhaCliente '', @error OUTPUT
-PRINT(@error)
 
 CREATE TABLE contacorrente (
 codigo				VARCHAR(30),
@@ -152,20 +144,33 @@ AS
 percentual de rendimento da poupança. Outros atributos não podem ser
 atualizados.*/
 --ARRUMAR ESSA PROCEDURE DEPOIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
---ARRUMAR ESSA PROCEDURE DEPOIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
---ARRUMAR ESSA PROCEDURE DEPOIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
---ARRUMAR ESSA PROCEDURE DEPOIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-CREATE PROCEDURE sp_updateCliente(@cpf VARCHAR(14), @senha VARCHAR(20), @saldo DECIMAL(10,2), @limite DECIMAL(7,2),
-@percentual DECIMAL(3,2), @func BIT, @conta VARCHAR(50), @codigo VARCHAR(30))
+CREATE PROCEDURE sp_updateClienteSenha(@cpf VARCHAR(14), @senha VARCHAR(20))
 AS
 DECLARE @erro VARCHAR(100)
 BEGIN TRY
-	IF(@func = 0)
-	BEGIN
 		UPDATE cliente
 		SET senha = @senha
 		WHERE cpf = @cpf
-	END
+END TRY
+BEGIN CATCH
+	SET @erro = ERROR_MESSAGE()
+	RAISERROR(@erro, 16, 1)
+END CATCH
+
+CREATE PROCEDURE sp_updateContaSaldo(@codigo VARCHAR(30), @saldo DECIMAL(10,2))
+AS
+	DECLARE @erro VARCHAR(100)
+	BEGIN TRY
+		UPDATE conta
+		SET saldo = @saldo
+		WHERE codigo = @codigo
+	END TRY
+	BEGIN CATCH
+		SET @erro = ERROR_MESSAGE()
+		RAISERROR(@erro, 16, 1)
+	END CATCH
+
+
 	ELSE IF (@func = 1)
 	BEGIN
 		IF (@conta LIKE '%corrente%')
@@ -246,7 +251,7 @@ AS
 
 /*• Para se incluir um(a) companheiro(a) na conta conjunta, esta já precisa
 existir e ter um cliente cadastrado. Deve se passar por uma tela de login e
-senha para autorizar a inclusão de um cliente na conta conjunta. STATUS: LOGIN TESTADO, AINDA FALTA A INSERÇÃO DE CLIENTE CONTA CONJUNTA. */
+senha para autorizar a inclusão de um cliente na conta conjunta. STATUS: ESTA FUNCIONANDO, tem que usar o inserir sem @transactional */
 
 CREATE PROCEDURE sp_verificaLogin(@cpf VARCHAR(14), @senha VARCHAR(30), @valido BIT OUTPUT)
 AS
@@ -259,18 +264,12 @@ AS
 		SET @valido = 0
 	END
 
-CREATE PROCEDURE sp_inserirClienteContaConj(@codigo VARCHAR(30), @cpf VARCHAR(14), @cpf2 VARCHAR(14))
+CREATE PROCEDURE sp_inserirClienteContaConj(@codigo VARCHAR(30), @cpf2 VARCHAR(14))
 AS
 DECLARE @validoB BIT
-EXEC sp_validarContaParaConj @codigo, @validoB OUT
-IF (@validoB = 1)
-BEGIN
 	UPDATE conta
 	SET cpfCliente2 = @cpf2
 	WHERE codigo = @codigo
-END
-
-
 
 
 /*• Não é permitido incluir um(a) companheiro(a) na conta conjunta em uma
