@@ -247,7 +247,6 @@ AS
 		RAISERROR(@erro, 16, 1)
 	END CATCH
 
-	
 
 /*• Para se incluir um(a) companheiro(a) na conta conjunta, esta já precisa
 existir e ter um cliente cadastrado. Deve se passar por uma tela de login e
@@ -287,3 +286,19 @@ AS
 		SET @valido = 0
 	END
 
+	
+
+/* Essa procedure foi feita para verificar se o cliente tem uma conta poupança ou corrente cadastrada*/
+CREATE PROCEDURE sp_verificarContaCorrenteOuPoupanca(@cpfCliente VARCHAR(14), @tipo VARCHAR(11) OUTPUT)
+AS
+	DECLARE @codigoConta VARCHAR(30)
+
+	SET @codigoConta = (SELECT codigo FROM conta WHERE cpfCliente1 = @cpfCliente OR cpfCliente2 = @cpfCliente)
+	IF((SELECT codigo FROM contacorrente WHERE codigo = @codigoConta) IS NOT NULL)
+	BEGIN
+		SET @tipo = 'corrente'
+	END
+	ELSE IF ((SELECT codigo FROM contapoupanca WHERE codigo = @codigoConta) IS NOT NULL)
+	BEGIN
+		SET @tipo = 'poupanca'
+	END

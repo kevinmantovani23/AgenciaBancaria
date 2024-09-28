@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import jakarta.servlet.http.HttpSession;
 import trab1.Banco.model.Cliente;
 import trab1.Banco.servico.IClienteRepository;
 
@@ -18,18 +19,19 @@ public class ClienteController {
 	IClienteRepository clRep;
 	
 	@GetMapping("/login")
-	public ModelAndView telaLogin() {
+	public ModelAndView telaLogin(HttpSession session) {
 		ModelAndView log = new ModelAndView("/telaInicial_form");
 		log.addObject("cliente", new Cliente());
 		return log;
 	}
 	
 	@PostMapping("/login")
-	public ModelAndView trataLogin(@ModelAttribute("cliente") Cliente cliente, @RequestParam("acao") String acao) {
+	public ModelAndView trataLogin(HttpSession session, @ModelAttribute("cliente") Cliente cliente, @RequestParam("acao") String acao) {
 		if (acao.equals("login")) {
 			
 		if(clRep.sp_verificaLogin(cliente.getCpf(), cliente.getSenha())) {
-				
+				session.setAttribute("cpfCliente", cliente.getCpf());
+				return new ModelAndView("redirect:paginaInicial");
 			} else {
 				return new ModelAndView("redirect:login?error");
 			}

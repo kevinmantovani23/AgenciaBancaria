@@ -3,6 +3,7 @@ package trab1.Banco.servico;
 import java.math.BigDecimal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
@@ -25,5 +26,12 @@ public interface IContaRepository extends JpaRepository<Conta, String> {
 	
 	@Procedure(name = "Conta.sp_excluiconta")
 	public void sp_excluiconta(@Param("cpf") String cpf);
+	
+	@Procedure(name="Conta.sp_verificarContaCorrenteOuPoupanca")
+	public String sp_verificarContaCorrenteOuPoupanca(@Param("cpfCliente") String cpf);
+	
+	@Query(value = "SELECT cont.codigo, cont.cpfCliente1, cont.cpfCliente2, cont.codigoAgencia, cont.codigo, cont.dataAbertura, cont.saldo"
+			+ " FROM conta cont WHERE codigo = ?",  nativeQuery = true)
+	public Conta findByCodigo(String codigo);
 	
 }

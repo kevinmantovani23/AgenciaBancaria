@@ -2,6 +2,7 @@ package trab1.Banco;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import jakarta.transaction.Transactional;
 import trab1.Banco.model.Agencia;
+import trab1.Banco.model.Conta;
+import trab1.Banco.model.ContaCorrente;
 import trab1.Banco.servico.IAgenciaRepository;
 import trab1.Banco.servico.IClienteRepository;
 import trab1.Banco.servico.IContaCorrenteRepository;
@@ -34,6 +37,12 @@ class BancoApplicationTests {
 	@Autowired 
 	private IContaPoupancaRepository poupRep;
 	
+	
+	@Test
+	void testSelectCorrente() {
+		Conta conat = contRep.findById("302311").get();
+		System.out.println(conat.toString());
+	}
 	@Test
 	void testexcluiConta() {
 		contRep.sp_excluiconta("92212675231");
@@ -96,9 +105,8 @@ class BancoApplicationTests {
 	
 	
 	@Test
-	@Transactional
 	void verificaSenha() {
-		String resu = cliRep.sp_verificaSenhaCliente("joazzzz4");
+		String resu = cliRep.sp_verificaSenhaCliente("aaaaaaaa");
 		
 		System.out.println(resu);
 	}
@@ -107,7 +115,7 @@ class BancoApplicationTests {
 	//@Transactional
 	void criarConta() {
 			
-			contRep.sp_insertClienteConta("Jonas", "92212675231" , "joaoz123",  "corrente", "30");
+			contRep.sp_insertClienteConta("Jonas", "92212675231" , "joaoz123",  "corrente");
 		
 			//System.out.println(saida);
 	}
