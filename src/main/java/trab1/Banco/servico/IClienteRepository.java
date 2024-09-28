@@ -1,4 +1,4 @@
-package trab1.Banco.repository;
+package trab1.Banco.servico;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
@@ -6,12 +6,12 @@ import org.springframework.data.repository.query.Param;
 
 import trab1.Banco.model.Cliente;
 
-public interface ClienteRepository extends JpaRepository<Cliente, String>{
+public interface IClienteRepository extends JpaRepository<Cliente, String>{
 	
 	@Procedure(name = "Cliente.sp_validarContaParaConj") 
 	public boolean sp_validarContaParaConj(@Param("codigoConta") String codigoConta);
 
-	@Procedure(name = "Cliente.sp_verificaLogin") 
+	@Procedure(name = "Cliente.sp_verificaLogin") //verifica se o login está correto
 	public boolean sp_verificaLogin(@Param("cpf") String cpf, @Param("senha") String senha);
 	
 	@Procedure(name = "Cliente.sp_verificaSenhaCliente") 

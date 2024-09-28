@@ -212,16 +212,18 @@ AS
 	BEGIN
 		SET @valido = 'Cliente já cadastrado.'
 	END
-
+	
 CREATE PROCEDURE sp_insertClienteConta(@nome VARCHAR(100), @cpf VARCHAR(14),
-@senha VARCHAR(25), @tipo VARCHAR(20), @agencia VARCHAR(20), @erro VARCHAR(200) OUTPUT)
+@senha VARCHAR(25), @tipo VARCHAR(20), @erro VARCHAR(200) OUTPUT)
 AS
 	DECLARE @codigo VARCHAR(30)
-
+	DECLARE @agencia VARCHAR(20)
 	BEGIN TRY
 	BEGIN TRANSACTION
 			INSERT INTO cliente
 			VALUES(@cpf,@nome, GETDATE(),@senha)
+			SET @agencia = (SELECT TOP 1 codigo from agencia ORDER BY NEWID())
+
 			EXEC sp_geracodigoconta @agencia, @cpf, null, @codigo OUT
 
 			INSERT INTO conta
@@ -245,8 +247,7 @@ AS
 		RAISERROR(@erro, 16, 1)
 	END CATCH
 
-
-
+	
 
 /*• Para se incluir um(a) companheiro(a) na conta conjunta, esta já precisa
 existir e ter um cliente cadastrado. Deve se passar por uma tela de login e

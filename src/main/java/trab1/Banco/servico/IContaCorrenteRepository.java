@@ -1,4 +1,4 @@
-package trab1.Banco.repository;
+package trab1.Banco.servico;
 
 import java.math.BigDecimal;
 
@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import trab1.Banco.model.ContaCorrente;
 
-public interface ContaCorrenteRepository extends JpaRepository<ContaCorrente, String>{
+public interface IContaCorrenteRepository extends JpaRepository<ContaCorrente, String>{
 
 	@Procedure(name = "ContaCorrente.sp_updateContaLimCredito") 
 	public void sp_updateContaLimCredito(@Param("codigo") String codigo, @Param("limite") BigDecimal limite);

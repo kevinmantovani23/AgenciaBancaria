@@ -10,29 +10,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import jakarta.transaction.Transactional;
 import trab1.Banco.model.Agencia;
-import trab1.Banco.repository.AgenciaRepository;
-import trab1.Banco.repository.ClienteRepository;
-import trab1.Banco.repository.ContaCorrenteRepository;
-import trab1.Banco.repository.ContaPoupancaRepository;
-import trab1.Banco.repository.ContaRepository;
+import trab1.Banco.servico.IAgenciaRepository;
+import trab1.Banco.servico.IClienteRepository;
+import trab1.Banco.servico.IContaCorrenteRepository;
+import trab1.Banco.servico.IContaPoupancaRepository;
+import trab1.Banco.servico.IContaRepository;
 
 @SpringBootTest
 class BancoApplicationTests {
 
 	@Autowired
-	private AgenciaRepository agcRep;
+	private IAgenciaRepository agcRep;
 	
 	@Autowired
-	private ContaRepository contRep;
+	private IContaRepository contRep;
 	
 	@Autowired
-	private ClienteRepository cliRep;
+	private IClienteRepository cliRep;
 	
 	@Autowired
-	private ContaCorrenteRepository corrRep;
+	private IContaCorrenteRepository corrRep;
 	
 	@Autowired 
-	private ContaPoupancaRepository poupRep;
+	private IContaPoupancaRepository poupRep;
 	
 	@Test
 	void testexcluiConta() {
@@ -50,16 +50,19 @@ class BancoApplicationTests {
 	void testAtualizaPercentual() {
 		poupRep.sp_updateContaPerPoupanca("300612", new BigDecimal(9.3));
 	}
+	
 	@Test
 	void testAtualizaCredito() {
 		corrRep.sp_updateContaLimCredito("302311", new BigDecimal(123.32));
 	}
+	
 	@Test
 	void testAtualizarSaldo() {
 		contRep.sp_updateContaSaldo("300612", new BigDecimal(-231.32));
 	}
+	
 	@Test
-	//Por que procedures com update não dão o update se tiver com o @Transactional??
+	//transactional esta dando erro
 	void testAtualizaSenha() {
 		cliRep.sp_updateClienteSenha("52851481061", "joaob");
 	}

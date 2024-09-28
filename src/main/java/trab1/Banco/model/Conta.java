@@ -17,7 +17,7 @@ import lombok.Data;
 @Data
 @Table(name = "conta")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Conta {
+public class Conta {
 
 	 @Id
 	 @Column(name = "codigo", length = 30, nullable = true )
