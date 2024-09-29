@@ -30,8 +30,10 @@ public interface IContaRepository extends JpaRepository<Conta, String> {
 	@Procedure(name="Conta.sp_verificarContaCorrenteOuPoupanca")
 	public String sp_verificarContaCorrenteOuPoupanca(@Param("cpfCliente") String cpf);
 	
-	@Query(value = "SELECT cont.codigo, cont.cpfCliente1, cont.cpfCliente2, cont.codigoAgencia, cont.codigo, cont.dataAbertura, cont.saldo"
-			+ " FROM conta cont WHERE codigo = ?",  nativeQuery = true)
-	public Conta findByCodigo(String codigo);
+	@Query(value= "SELECT c.codigo FROM conta c WHERE c.cpfCliente1 = :cpf OR c.cpfCliente2 = :cpf", nativeQuery = true)
+	public String pegarCodigo(@Param("cpf") String cpf);
+	
+	@Query(value= "SELECT c.saldo FROM conta c WHERE c.cpfCliente1 = :cpf OR c.cpfCliente2 = :cpf", nativeQuery = true)
+	public BigDecimal pegarSaldo(@Param("cpf") String cpf);
 	
 }

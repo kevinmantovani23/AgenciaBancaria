@@ -55,14 +55,37 @@ public class ContaController {
 	
 	@GetMapping("/paginaInicial")
 	public ModelAndView telaInicial(HttpSession session) {
+		ModelAndView mv = new ModelAndView("/contaInfo_form");
 		
 		String cpfCliente = (String) session.getAttribute("cpfCliente");
 		String tipo = contRep.sp_verificarContaCorrenteOuPoupanca(cpfCliente);
-		Optional<Cliente> cliOpt = clRep.findById(cpfCliente);
-		Cliente cli = cliOpt.get();
-		if(tipo.equals("corrente")) {
-			ContaCorrente cont = new ContaCorrente();
+		Cliente cli = clRep.findById(cpfCliente).get();
+		
+		String id = contRep.pegarCodigo(cpfCliente);
+		Conta corr = contRep.findById(id).get();
+		
+		mv.addObject("conta", corr);
+		mv.addObject("tipo", tipo);
+		mv.addObject("cliente", cli);
+		
+		
+		return mv;
+	}
+	
+	@PostMapping("/paginaInicial")
+	public ModelAndView postTelaInicial(HttpSession session, @RequestParam("acao") String acao) {
+		
+		String cpfCliente = (String) session.getAttribute("cpfCliente");
+		
+		if ("senha".equals(acao)) {
+			return new ModelAndView("redirect:alterarsenha");
+		} else if ("adicionar".equals(acao)) {
+			if (clRep.sp_validarContaParaConj(contRep.pegarCodigo(cpfCliente))) {
+				return new ModelAndView("redirect:adicionarConj");
+			} else {
+				return new ModelAndView("redirect:paginaInicial?error");
+			}
 		}
-		return null;
+		return new ModelAndView("redirect:paginaInicial");
 	}
 }

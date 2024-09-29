@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,12 +38,15 @@ class BancoApplicationTests {
 	@Autowired 
 	private IContaPoupancaRepository poupRep;
 	
-	
+
 	@Test
-	void testSelectCorrente() {
-		Conta conat = contRep.findById("302311").get();
-		System.out.println(conat.toString());
-	}
+	void test() {
+		System.out.println(contRep.pegarSaldo("52851481061"));
+		Conta corr = contRep.findById("301111").get();
+		corr.setSaldo(contRep.pegarSaldo("52851481061"));
+		System.out.println(corr.getDataAbertura());
+		}
+	
 	@Test
 	void testexcluiConta() {
 		contRep.sp_excluiconta("92212675231");

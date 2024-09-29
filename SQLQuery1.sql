@@ -1,7 +1,7 @@
 CREATE DATABASE sistemabancario
 GO
 USE sistemabancario
-
+SELECT * FROM cliente
 CREATE TABLE cliente (
 cpf					VARCHAR(14),
 nome				VARCHAR(100),
@@ -198,7 +198,7 @@ AS
 	END CATCH
 
 	
-
+	 
 /*• Um cliente novo deve preencher seus dados, o tipo de conta escolhida que
 inicia com saldo zerado e limite de crédito em 500,00. Se for poupança, o dia
 de aniversário padrão é dia 10, com início de rendimento em 1%.   CHECK: FUNCIONANDO*/

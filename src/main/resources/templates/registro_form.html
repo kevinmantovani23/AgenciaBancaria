@@ -29,7 +29,7 @@
                     	<input type="radio" name="tipo" value="corrente" id="corr" checked>
                     	 <label for="corr">Conta corrente</label>
                     	<input type="radio" name="tipo" value="poupanca" id="poup">
-                    	 <label for="corr">Conta poupança</label>
+                    	 <label for="poup">Conta poupança</label>
                     </fieldset>
                     
                     <tr>
@@ -40,7 +40,7 @@
         </form>
         
         <div th:if="${param.error}" class="alert alert-danger">    
-    			<p th:text="${param.mensagem}"></p>
+    			A senha deve ter 8 caracteres e pelo menos 3 números.
 		</div>
 </body>
 </html>
