@@ -51,13 +51,14 @@ PRIMARY KEY (codigo)
 últimos dígitos do CPF do titular (Se for conta conjunta, deve trazer os dois),
 concatenado com um dígito verificador CHECK: FUNCIONANDO*/
 
+
 CREATE PROCEDURE sp_geracodigoconta(@codAgencia VARCHAR(20), @cpfCliente1 VARCHAR(14), @cpfCliente2 VARCHAR(14), @codConta VARCHAR(30) OUTPUT)
 AS
 	DECLARE @temp VARCHAR(40)
 	SET @cpfCliente1 = SUBSTRING(@cpfCliente1, 9, 3)
 	IF (@cpfCliente2 IS NOT NULL)
 		BEGIN
-			SET @cpfCliente2 = SUBSTRING(@cpfCliente1, 9, 3)
+			SET @cpfCliente2 = SUBSTRING(@cpfCliente2, 9, 3)
 			SET @cpfCliente1 = @cpfCliente1 + @cpfCliente2
 		END
 	SET @temp = @codAgencia + @cpfCliente1
@@ -265,12 +266,22 @@ AS
 
 CREATE PROCEDURE sp_inserirClienteContaConj(@codigo VARCHAR(30), @cpf2 VARCHAR(14))
 AS
-DECLARE @validoB BIT
+	DECLARE @codAgencia VARCHAR(20)
+	DECLARE @cpfCliente1 VARCHAR(14)
+	SET @codAgencia = (SELECT codigoAgencia FROM conta WHERE codigo = @codigo)
+	SET @cpfCliente1 = (SELECT cpfCliente1 FROM conta WHERE codigo = @codigo)
+
 	UPDATE conta
 	SET cpfCliente2 = @cpf2
 	WHERE codigo = @codigo
 
+	EXEC sp_geracodigoconta @codAgencia, @cpfCliente1, @cpf2 , @codigo OUT
 
+	UPDATE conta
+	SET codigo = @codigo
+	WHERE cpfCliente1 = @cpfCliente1
+
+	SELECT * FROM conta
 /*• Não é permitido incluir um(a) companheiro(a) na conta conjunta em uma
 conta com saldo menor ou igual a zero. Salvo conta criada no mesmo dia. CHECK: TESTADO
 */
@@ -303,8 +314,10 @@ AS
 		SET @tipo = 'poupanca'
 	END
 
+/* Procedure feita para quando for adicionar um cliente novo na conta conjunta, ele existir no banco de dados.*/
 
 CREATE PROCEDURE sp_insertCliente(@cpf VARCHAR(14), @nome VARCHAR(100), @senha VARCHAR(8))
 AS
 	INSERT INTO cliente
 	VALUES(@cpf,@nome, GETDATE(),@senha)
+

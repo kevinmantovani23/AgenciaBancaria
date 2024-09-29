@@ -41,9 +41,7 @@ class BancoApplicationTests {
 
 	@Test
 	void test() {
-		System.out.println(contRep.pegarSaldo("52851481061"));
 		Conta corr = contRep.findById("301111").get();
-		corr.setSaldo(contRep.pegarSaldo("52851481061"));
 		System.out.println(corr.getDataAbertura());
 		}
 	

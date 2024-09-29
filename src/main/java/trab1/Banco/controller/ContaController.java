@@ -1,9 +1,7 @@
 package trab1.Banco.controller;
 
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 import jakarta.servlet.http.HttpSession;
 import trab1.Banco.model.Cliente;
 import trab1.Banco.model.Conta;
-import trab1.Banco.model.ContaCorrente;
 import trab1.Banco.servico.IClienteRepository;
 import trab1.Banco.servico.IContaRepository;
 
@@ -26,6 +23,7 @@ public class ContaController {
 	
 	@Autowired
 	IContaRepository contRep;
+	
 	
 	@GetMapping("/registrar")
 	public ModelAndView registrarConta() {
@@ -89,3 +87,6 @@ public class ContaController {
 		return new ModelAndView("redirect:paginaInicial");
 	}
 }
+	
+
+

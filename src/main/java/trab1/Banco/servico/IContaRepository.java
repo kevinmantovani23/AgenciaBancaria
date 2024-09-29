@@ -1,13 +1,14 @@
 package trab1.Banco.servico;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
-import jakarta.persistence.PersistenceException;
+
 import trab1.Banco.model.Conta;
 
 public interface IContaRepository extends JpaRepository<Conta, String> {
@@ -33,6 +34,10 @@ public interface IContaRepository extends JpaRepository<Conta, String> {
 	@Query(value= "SELECT c.codigo FROM conta c WHERE c.cpfCliente1 = :cpf OR c.cpfCliente2 = :cpf", nativeQuery = true)
 	public String pegarCodigo(@Param("cpf") String cpf);
 	
+	@Query(value= "SELECT c.cpfCliente1 FROM conta c WHERE c.codigo = :codigo", nativeQuery = true)
+	public String pegarCPF(@Param("codigo") String codigo);
 	
+	@Query("select c from Conta c where c.codigo like %:codigo%")
+    List<Conta> findByCodigo(@Param("codigo") String codigo);
 	
 }

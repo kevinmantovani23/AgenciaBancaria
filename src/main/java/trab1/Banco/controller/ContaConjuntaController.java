@@ -40,7 +40,7 @@ public class ContaConjuntaController {
 		
 		} else if (clRep.sp_verificaSenhaCliente(cliente.getSenha()) != null){
 			String msg = clRep.sp_verificaSenhaCliente(cliente.getSenha());
-			ModelAndView resp = new ModelAndView("redirect:registrar?error=true&mensagem=" + msg);
+			ModelAndView resp = new ModelAndView("redirect:contaConjr?error=true&mensagem=" + msg);
 			
 			return resp;
 		} else {
