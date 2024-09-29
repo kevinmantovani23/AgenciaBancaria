@@ -277,7 +277,7 @@ conta com saldo menor ou igual a zero. Salvo conta criada no mesmo dia. CHECK: T
 CREATE PROCEDURE sp_validarContaParaConj(@codigoConta VARCHAR(30), @valido BIT OUTPUT)
 AS
 	IF((SELECT saldo FROM conta WHERE codigo = @codigoConta) > 0 OR (SELECT dataAbertura FROM conta 
-		WHERE codigo = @codigoConta) = GETDATE())
+		WHERE codigo = @codigoConta) = CAST (GETDATE() AS DATE))
 	BEGIN
 		SET @valido = 1
 	END
@@ -285,7 +285,7 @@ AS
 	BEGIN
 		SET @valido = 0
 	END
-
+	
 	
 
 /* Essa procedure foi feita para verificar se o cliente tem uma conta poupança ou corrente cadastrada*/
@@ -302,3 +302,9 @@ AS
 	BEGIN
 		SET @tipo = 'poupanca'
 	END
+
+
+CREATE PROCEDURE sp_insertCliente(@cpf VARCHAR(14), @nome VARCHAR(100), @senha VARCHAR(8))
+AS
+	INSERT INTO cliente
+	VALUES(@cpf,@nome, GETDATE(),@senha)

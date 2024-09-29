@@ -14,7 +14,5 @@ public interface IContaCorrenteRepository extends JpaRepository<ContaCorrente, S
 	@Procedure(name = "ContaCorrente.sp_updateContaLimCredito") 
 	public void sp_updateContaLimCredito(@Param("codigo") String codigo, @Param("limite") BigDecimal limite);
 	
-	@Query(value = "SELECT cont.codigo, cont.cpfCliente1, cont.cpfCliente2, cont.codigoAgencia, cont.codigo, cont.dataAbertura, cont.saldo, corr.limiteCredito "
-			+ "FROM conta cont, contacorrente corr WHERE cont.codigo = corr.codigo AND cont.codigo = ?", nativeQuery = true)
-	public ContaCorrente findByCodigo(String codigo);
+	
 }

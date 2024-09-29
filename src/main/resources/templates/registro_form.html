@@ -40,7 +40,7 @@
         </form>
         
         <div th:if="${param.error}" class="alert alert-danger">    
-    			A senha deve ter 8 caracteres e pelo menos 3 números.
+    			<p th:text="${param.mensagem}"></p>
 		</div>
 </body>
 </html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Alterar senha</title>
+</head>
+<body>
+	<h1>Alterar senha</h1>
+		<form th:action="@{/alteraSenha}" method="post">
+            <table>
+                <tbody>
+                    
+                
+                    <tr>
+                        <td>Nova Senha: </td>
+                        <td><input type="password" th:field="*{cliente.senha}"/></td>
+                    </tr>
+                    	
+                 
+                    
+                    <tr>
+                        <td><button type="submit" name="acao" value="confirma">Confirmar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+        
+        <div th:if="${param.error}" class="alert alert-danger">    
+    			<p th:text="${param.mensagem}"></p>
+		</div>
+</body>

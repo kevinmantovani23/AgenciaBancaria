@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert Conta Conjunta</title>
+</head>
+<body>
+	<h1>Adicionar novo cliente em conta conjunta</h1>
+	<form th:action="@{/contaConj}" method="post">
+		<table>
+			<tbody>
+
+
+				<tr>
+					<td>Nome:</td>
+					<td><input type="text" th:field="*{cliente.nome}" /></td>
+				</tr>
+
+				<tr>
+					<td>CPF:</td>
+					<td><input type="number" th:field="*{cliente.cpf}" /></td>
+				</tr>
+				<tr>
+					<td>Senha:</td>
+					<td><input type="password" th:field="*{cliente.senha}" /></td>
+				</tr>
+
+
+
+				<tr>
+					<td><button type="submit" name="acao" value="confirma">Confirmar</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+
+	<div th:if="${param.error}" class="alert alert-danger">
+		<p th:text="${param.mensagem}"></p>
+	</div>
+</body>
+</html>

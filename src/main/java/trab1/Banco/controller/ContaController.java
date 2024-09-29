@@ -42,7 +42,7 @@ public class ContaController {
 			
 			return resp;
 		} else if (clRep.sp_verificaSenhaCliente(cliente.getSenha()) != null){
-			String msg = clRep.sp_verificaSenhaCliente(cliente.getCpf());
+			String msg = clRep.sp_verificaSenhaCliente(cliente.getSenha());
 			ModelAndView resp = new ModelAndView("redirect:registrar?error=true&mensagem=" + msg);
 			
 			return resp;
@@ -78,10 +78,10 @@ public class ContaController {
 		String cpfCliente = (String) session.getAttribute("cpfCliente");
 		
 		if ("senha".equals(acao)) {
-			return new ModelAndView("redirect:alterarsenha");
+			return new ModelAndView("redirect:alteraSenha");
 		} else if ("adicionar".equals(acao)) {
 			if (clRep.sp_validarContaParaConj(contRep.pegarCodigo(cpfCliente))) {
-				return new ModelAndView("redirect:adicionarConj");
+				return new ModelAndView("redirect:contaConj");
 			} else {
 				return new ModelAndView("redirect:paginaInicial?error");
 			}

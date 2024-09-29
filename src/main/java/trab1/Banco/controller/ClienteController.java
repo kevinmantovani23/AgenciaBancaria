@@ -17,19 +17,20 @@ public class ClienteController {
 
 	@Autowired
 	IClienteRepository clRep;
-	
+
 	@GetMapping("/login")
 	public ModelAndView telaLogin(HttpSession session) {
 		ModelAndView log = new ModelAndView("/telaInicial_form");
 		log.addObject("cliente", new Cliente());
 		return log;
 	}
-	
+
 	@PostMapping("/login")
-	public ModelAndView trataLogin(HttpSession session, @ModelAttribute("cliente") Cliente cliente, @RequestParam("acao") String acao) {
+	public ModelAndView trataLogin(HttpSession session, @ModelAttribute("cliente") Cliente cliente,
+			@RequestParam("acao") String acao) {
 		if (acao.equals("login")) {
-			
-		if(clRep.sp_verificaLogin(cliente.getCpf(), cliente.getSenha())) {
+
+			if (clRep.sp_verificaLogin(cliente.getCpf(), cliente.getSenha())) {
 				session.setAttribute("cpfCliente", cliente.getCpf());
 				return new ModelAndView("redirect:paginaInicial");
 			} else {
@@ -38,9 +39,29 @@ public class ClienteController {
 		} else if (acao.equals("registrar")) {
 			return new ModelAndView("redirect:registrar");
 		}
-		
+
 		return new ModelAndView("redirect:login");
-		
-		
+
+	}
+
+	@GetMapping("/alteraSenha")
+	public ModelAndView alteraSenha(HttpSession session) {
+		ModelAndView log = new ModelAndView("/alteraSenha_form");
+		log.addObject("cliente", new Cliente());
+		return log;
+	}
+
+	@PostMapping("/alteraSenha")
+	public ModelAndView postSenha(HttpSession session, @ModelAttribute("cliente") Cliente cliente) {
+		String clienteCPF = (String) session.getAttribute("cpfCliente");
+		if (clRep.sp_verificaSenhaCliente(cliente.getSenha()) != null) {
+			String msg = clRep.sp_verificaSenhaCliente(cliente.getSenha());
+			ModelAndView resp = new ModelAndView("redirect:alteraSenha?error=true&mensagem=" + msg);
+
+			return resp;
+		} else {
+			clRep.sp_updateClienteSenha(clienteCPF, cliente.getSenha());
+			return new ModelAndView("redirect:paginaInicial");
+		}
 	}
 }

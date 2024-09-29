@@ -33,7 +33,6 @@ public interface IContaRepository extends JpaRepository<Conta, String> {
 	@Query(value= "SELECT c.codigo FROM conta c WHERE c.cpfCliente1 = :cpf OR c.cpfCliente2 = :cpf", nativeQuery = true)
 	public String pegarCodigo(@Param("cpf") String cpf);
 	
-	@Query(value= "SELECT c.saldo FROM conta c WHERE c.cpfCliente1 = :cpf OR c.cpfCliente2 = :cpf", nativeQuery = true)
-	public BigDecimal pegarSaldo(@Param("cpf") String cpf);
+	
 	
 }

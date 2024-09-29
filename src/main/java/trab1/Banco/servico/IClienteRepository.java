@@ -22,4 +22,7 @@ public interface IClienteRepository extends JpaRepository<Cliente, String>{
 	
 	@Procedure(name = "Cliente.sp_updateClienteSenha")
 	public void sp_updateClienteSenha(@Param("cpf") String cpf, @Param("senha") String senha);
+	
+	@Procedure(name = "Cliente.sp_insertCliente")
+	public void sp_insertCliente(@Param("cpf") String cpf, @Param("nome") String nome, @Param("senha") String senha);
 }
