@@ -38,7 +38,13 @@ public class ContaConjuntaController {
 			
 			return resp;
 		
+		} else if (clRep.sp_verificaSenhaCliente(cliente.getSenha()) != null){
+			String msg = clRep.sp_verificaSenhaCliente(cliente.getSenha());
+			ModelAndView resp = new ModelAndView("redirect:registrar?error=true&mensagem=" + msg);
+			
+			return resp;
 		} else {
+			
 			clRep.sp_insertCliente(cliente.getCpf(), cliente.getNome(), cliente.getSenha());
 			contRep.sp_inserirClienteContaConj(contRep.pegarCodigo(clienteOrig), cliente.getCpf());
 			return new ModelAndView("redirect:paginaInicial");
