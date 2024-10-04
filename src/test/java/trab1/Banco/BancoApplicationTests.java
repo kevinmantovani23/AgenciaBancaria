@@ -80,7 +80,7 @@ class BancoApplicationTests {
 	
 	@Test
 	void testInsertContaConj() {
-		contRep.sp_inserirClienteContaConj("300612", "52851489879");
+		contRep.sp_inserirClienteContaConj("300612", "");
 	}
 	
 	@Test
